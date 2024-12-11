@@ -1,4 +1,4 @@
-import cv2
+"""import cv2 
 import numpy as np
 import os
 
@@ -59,11 +59,7 @@ def detect_stylo_rouge(img):
 
 # Fonction pour parcourir toutes les photos et détecter le crayon rouge
 def process_photos_in_folder(folder_path):
-    # Trier les fichiers par numéro dans le nom (ordre numérique)
-    photo_files = sorted(
-        [f for f in os.listdir(folder_path) if f.endswith(".jpg") or f.endswith(".png")],
-        key=lambda x: int(''.join(filter(str.isdigit, x)))  # Extraire les numéros pour trier
-    )
+    photo_files = [f for f in os.listdir(folder_path) if f.endswith(".jpg") or f.endswith(".png")]
     
     for photo in photo_files:
         # Charger l'image
@@ -92,5 +88,4 @@ def process_photos_in_folder(folder_path):
 photos_folder = "photos"
 
 # Traiter les photos dans le dossier
-process_photos_in_folder(photos_folder)
-
+process_photos_in_folder(photos_folder)"""

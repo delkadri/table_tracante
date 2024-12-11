@@ -15,3 +15,5 @@ for path in paths:
         x_end, y_end = end.real, end.imag
         print(f"Début : ({x_start}, {y_start}), Fin : ({x_end}, {y_end})")
 
+        
+
