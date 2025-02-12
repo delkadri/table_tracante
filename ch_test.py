@@ -1,31 +1,44 @@
+#!/usr/bin/env python3
+
 import serial
 import time
 
-# Adaptation du port selon ta config ; souvent /dev/ttyACM0 sur Linux
-# ou COM3, COM4... sur Windows
-SERIAL_PORT = "/dev/ttyACM0"  
+# Modifiez si nécessaire :
+SERIAL_PORT = "/dev/ttyACM0"   # Sur Linux, sinon "COM3" sous Windows
 BAUD_RATE   = 115200
 
 def main():
-    # 1) Ouvrir la liaison série
+    # Liste de commandes à envoyer dans l'ordre
+    commands = [
+        "MOVE X=50 Y=80",   # 1er déplacement
+        "PEN_DOWN",         # abaisser le stylo (Z)
+        "MOVE X=50 Y=50",   # 2e déplacement
+        "PEN_UP",           # remonter le stylo (Z)
+        "END"               # fin
+    ]
+
+    # Ouvrir la liaison série
+    print(f"Ouverture de {SERIAL_PORT} à {BAUD_RATE} bauds...")
     ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
-    
-    # 2) Attendre 2 secondes, le temps que l’Arduino se réinitialise
-    time.sleep(2)
+    time.sleep(2)  # la plupart des cartes Arduino se réinitialisent à l'ouverture
 
-    # 3) La commande qu'on souhaite envoyer (une seule ligne)
-    command = "MOVE X=100 Y=200"
+    for cmd in commands:
+        print(f"Envoi de la commande : {cmd}")
+        ser.write((cmd + "\n").encode('utf-8'))
 
-    print(f"Envoi de la commande : {command}")
-    # On ajoute un "\n" à la fin, pour que l’Arduino lise la ligne complète
-    ser.write((command + "\n").encode('utf-8'))
+        # Lire la réponse (ex: "OK")
+        response = ser.readline().decode('utf-8').strip()
+        if response:
+            print(f"Réponse de l'Arduino : {response}")
+        else:
+            print("Pas de réponse (timeout)")
 
-    # 4) Lire la réponse de l’Arduino (s’il envoie "OK" ou autre)
-    response = ser.readline().decode('utf-8').strip()
-    print(f"Réponse de l'Arduino : {response}")
+        # Petite pause si nécessaire (pas obligatoire)
+        time.sleep(0.1)
 
-    # 5) Fermer la liaison
+    # Fermer la liaison
     ser.close()
+    print("Fermeture de la liaison série.")
 
 if __name__ == "__main__":
     main()
