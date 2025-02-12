@@ -1,26 +1,30 @@
 import serial
 import time
 
-# Adaptation du port selon ta config ; souvent /dev/ttyACM0
-# (Si c'est un Arduino branché en USB)
-SERIAL_PORT = "/dev/ttyACM0"
+# Adaptation du port selon ta config ; souvent /dev/ttyACM0 sur Linux
+# ou COM3, COM4... sur Windows
+SERIAL_PORT = "/dev/ttyACM0"  
 BAUD_RATE   = 115200
 
 def main():
-    # Ouvrir la liaison série
+    # 1) Ouvrir la liaison série
     ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
-    time.sleep(2)  # Laisser un peu de temps à l'Arduino pour s'initialiser
+    
+    # 2) Attendre 2 secondes, le temps que l’Arduino se réinitialise
+    time.sleep(2)
 
-    # La commande qu'on veut envoyer (une seule ligne)
-    command = "MOVE X=1000 Y=200"
+    # 3) La commande qu'on souhaite envoyer (une seule ligne)
+    command = "MOVE X=100 Y=200"
 
     print(f"Envoi de la commande : {command}")
-    ser.write((command + "\n").encode('utf-8'))  # On envoie la ligne + un saut de ligne
+    # On ajoute un "\n" à la fin, pour que l’Arduino lise la ligne complète
+    ser.write((command + "\n").encode('utf-8'))
 
-    # Lire la réponse de l’Arduino (si le code Arduino envoie "OK" ou autre)
+    # 4) Lire la réponse de l’Arduino (s’il envoie "OK" ou autre)
     response = ser.readline().decode('utf-8').strip()
     print(f"Réponse de l'Arduino : {response}")
 
+    # 5) Fermer la liaison
     ser.close()
 
 if __name__ == "__main__":
