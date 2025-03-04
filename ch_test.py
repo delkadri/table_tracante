@@ -10,17 +10,18 @@ BAUD_RATE   = 115200
 def main():
     # Liste de commandes à envoyer dans l'ordre
     commands = [
-        "MOVE X=50 Y=80",   # 1er déplacement
+        "MOVE X=50 Y=50",   # 1er déplacement
         "PEN_DOWN",         # abaisser le stylo (Z)
-        "MOVE X=50 Y=50",   # 2e déplacement
+        "MOVE X=50 Y=80",   # 2e déplacement
         "PEN_UP",           # remonter le stylo (Z)
+
         "END"               # fin
     ]
 
     # Ouvrir la liaison série
     print(f"Ouverture de {SERIAL_PORT} à {BAUD_RATE} bauds...")
     ser = serial.Serial(SERIAL_PORT, BAUD_RATE, timeout=1)
-    time.sleep(2)  # la plupart des cartes Arduino se réinitialisent à l'ouverture
+    time.sleep(5)  # la plupart des cartes Arduino se réinitialisent à l'ouverture
 
     for cmd in commands:
         print(f"Envoi de la commande : {cmd}")
@@ -37,7 +38,9 @@ def main():
         time.sleep(0.1)
 
     # Fermer la liaison
+    #MISE A 0 DE BUFFER DE COMMANDE 
     ser.close()
+  
     print("Fermeture de la liaison série.")
 
 if __name__ == "__main__":

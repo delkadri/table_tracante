@@ -3,7 +3,7 @@ import numpy as np
 import os
 
 # Taille du châssis en cm
-chassis_size_cm = 50
+chassis_size_cm = 45 #avat c'etaitt 50
 half_chassis_size_cm = chassis_size_cm / 2
 
 # Dimensions de l'image capturée 
