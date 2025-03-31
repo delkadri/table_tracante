@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
+import libcamera
 from picamera2 import Picamera2
+
 
 # Dimensions du chassis en cm
 chassis_size = 45.0  # 45x45 cm
