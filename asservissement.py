@@ -23,8 +23,7 @@ print("Détection en cours... Appuyez sur 'q' pour quitter.")
 try:
     while True:
         # Capture une image depuis la caméra
-        frame = picam2.capture_array()
-
+        frame = picam2.capture_array() 
         # Convertir l'image en format BGR pour OpenCV
         frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
