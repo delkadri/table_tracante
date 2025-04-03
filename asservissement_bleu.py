@@ -3,21 +3,33 @@ import numpy as np
 import libcamera
 from picamera2 import Picamera2
 
-# Initialisation de la cam�ra
+# Initialisation de la camera
 picam2 = Picamera2()
 picam2.configure(picam2.create_preview_configuration())
 picam2.start()
 
-pixels_per_cm = 10  # �chelle fictive
+pixels_per_cm = 10  # echelle fictive
 
-print("D�tection en cours... Appuyez sur 'q' pour quitter.")
+print("Detection en cours... Appuyez sur 'q' pour quitter.")
+
+def lire_cible():
+    try:
+        with open("cible.txt", "r") as f:
+            x, y = map(float, f.read().strip().split(","))
+            return x, y
+    except:
+        return None, None
+
+def ecrire_ok():
+    with open("ok.txt", "w") as f:
+        f.write("OK")
 
 try:
     while True:
         frame = picam2.capture_array()
         frame_bgr = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
-        ### D�tection du point rouge en BGR ###
+        ### Detection du point rouge en BGR ###
         lower_red = np.array([0, 0, 170])
         upper_red = np.array([64, 64, 255])
         mask_red = cv2.inRange(frame_bgr, lower_red, upper_red)
@@ -33,7 +45,7 @@ try:
                 point_rouge = (cX, cY)
                 cv2.circle(frame_bgr, point_rouge, 10, (0, 255, 0), -1)
 
-        ### D�tection des points bleus en BGR ###
+        ### Detection des points bleus en BGR ###
         lower_blue = np.array([150, 0, 0])
         upper_blue = np.array([255, 100, 100])
         mask_blue = cv2.inRange(frame_bgr, lower_blue, upper_blue)
@@ -50,7 +62,7 @@ try:
                     blue_points.append((bx, by))
                     cv2.circle(frame_bgr, (bx, by), 8, (255, 0, 0), -1)
 
-        ### D�finition du rep�re (0,0) et calcul des coordonn�es relatives ###
+        ### Definition du repere (0,0) et calcul des coordonnees relatives ###
         if len(blue_points) >= 2 and point_rouge:
             x_coords = [p[0] for p in blue_points]
             y_coords = [p[1] for p in blue_points]
@@ -68,9 +80,9 @@ try:
             local_x_cm = (cX - origin_x) / pixels_per_cm
             local_y_cm = (origin_y - cY) / pixels_per_cm  # inversion car image vers le bas
 
-            # V�rification du cadre
+            # Verification du cadre
             if origin_x <= cX <= max_x and min_y <= cY <= origin_y:
-                print(f"Position du point rouge (rep�re local) : X = {local_x_cm:.2f} cm, Y = {local_y_cm:.2f} cm")
+                print(f"Position du point rouge (repere local) : X = {local_x_cm:.2f} cm, Y = {local_y_cm:.2f} cm")
             else:
                 cv2.putText(frame_bgr, "?? Hors cadre", (10, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
@@ -83,4 +95,4 @@ try:
 finally:
     picam2.stop()
     cv2.destroyAllWindows()
-    print("Capture et d�tection termin�es.")
+    print("Capture et detection terminees.")

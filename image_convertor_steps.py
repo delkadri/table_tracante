@@ -1,7 +1,7 @@
 from svgpathtools import svg2paths2
 
 # Charger le fichier SVG
-file_path = "simple_line.svg"  # Remplacez par le chemin de votre fichier SVG
+file_path = "triangle-svgrepo-com.svg"  # Remplacez par le chemin de votre fichier SVG
 paths, attributes, svg_attributes = svg2paths2(file_path)
 
 # Variable pour garder la position actuelle du moteur (initialement à l'origine)
